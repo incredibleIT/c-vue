@@ -1,3 +1,5 @@
+import type {NodeRunStatus} from "@/types/node-status.ts";
+
 export interface FlowNode {
     id: string
     position: {
@@ -9,6 +11,7 @@ export interface FlowNode {
     data: {
         label: string
         nodeType?: string
+        status?: NodeRunStatus
         [key: string]: any
     }
 

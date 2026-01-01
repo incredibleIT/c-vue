@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {useRoute} from "vue-router";
-import {ref, onMounted, Ref, computed} from "vue";
+import {ref, onMounted, Ref, computed, onUnmounted} from "vue";
 import {VueFlow, useVueFlow, NodeMouseEvent, EdgeMouseEvent, GraphEdge} from "@vue-flow/core";
 import {Background} from '@vue-flow/background'
 
@@ -24,6 +24,8 @@ import type { EdgeUpdateEvent } from "@vue-flow/core";
 import NodeConfigDialog from "@/components/flow/NodeConfigDialog.vue";
 import {runFlow} from "@/api/flow.ts";
 import {buildDefaultDataFromSchema} from "@/utils/build-default-data-from-schema.ts";
+import {initNodeStatusListener} from "@/bootstrap/node-status.ts";
+import {nodeStatusWS} from "@/services/node-status-ws.ts";
 
 
 const route = useRoute()
@@ -46,6 +48,7 @@ const selectedEdge: Ref<FlowEdge | null> = ref(null)
 
 onMounted(async () => {
     try {
+        initNodeStatusListener()
         flow.value = (await getFlowDetail(flowId)).data
         const nodeTypeRes = await listNodeTypes()
         nodeTypes.value = nodeTypeRes.data
@@ -55,6 +58,10 @@ onMounted(async () => {
     requestAnimationFrame(() => {
         fitView({padding: 0.2})
     })
+})
+
+onUnmounted(() => {
+    nodeStatusWS.disconnect()
 })
 
 /**

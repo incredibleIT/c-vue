@@ -2,7 +2,7 @@
  * WebSocket Service 通信层
  * 只关注, 连接建立/断开, 消息接收/发送, 外抛事件
  */
-import { NodeStatusEvent } from "@/types/node-status-event.ts";
+import type { NodeStatusEvent } from "@/types/node-status-event.ts";
 import type {WebSocket} from "vite";
 
 type Listener = (event: NodeStatusEvent) => void;
@@ -16,6 +16,7 @@ class NodeStatusWebSocket {
      * 创建WebSocket连接
      */
     connect() {
+        console.log("Connecting to node status websocket...")
         if (this.socket) return
 
         this.socket = new WebSocket('ws://localhost:8080/node-status') as WebSocket
