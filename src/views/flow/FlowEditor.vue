@@ -26,6 +26,7 @@ import {runFlow} from "@/api/flow.ts";
 import {buildDefaultDataFromSchema} from "@/utils/build-default-data-from-schema.ts";
 import {initNodeStatusListener} from "@/bootstrap/node-status.ts";
 import {nodeStatusWS} from "@/services/node-status-ws.ts";
+import router from "@/router";
 
 
 const route = useRoute()
@@ -44,7 +45,6 @@ const vueFlowNodeTypes = computed(() => buildVueFlowNodeTypes(nodeTypes.value))
 const activeNode: Ref<FlowNode | null> = ref(null)
 const activeNodeType: Ref<NodeType | null> = ref(null)
 const selectedEdge: Ref<FlowEdge | null> = ref(null)
-
 
 onMounted(async () => {
     try {
@@ -213,6 +213,14 @@ const onEdgeDelete = (edge: EdgeMouseEvent) => {
 const runF = (f: Flow) => {
     runFlow(f).then(res => {
         console.log(res)
+        const instanceId = res.data.id
+        router.push({
+            name: 'FlowRuntimePage',
+            params: {
+                flowId,
+                instanceId,
+            }
+        })
     })
 }
 </script>
@@ -234,7 +242,6 @@ const runF = (f: Flow) => {
         </el-aside>
 
         <el-main class="flow-editor__main">
-<!--@node-click="onNodeClick"-->
             <VueFlow
                 :nodes="nodes"
                 :edges="edges"
@@ -252,7 +259,7 @@ const runF = (f: Flow) => {
             </VueFlow>
         </el-main>
 
-        <el-button @click="runF(flow)"></el-button>
+        <el-button @click="runF(flow)">运行流程</el-button>
     </el-container>
 
     <NodeConfigDialog
@@ -292,15 +299,6 @@ const runF = (f: Flow) => {
     font-weight: 600;
     color: #303133;
     margin-bottom: 8px;
-}
-
-.placeholder {
-    padding: 12px;
-    border: 1px dashed #c0c4cc;
-    border-radius: 6px;
-    color: #909399;
-    font-size: 13px;
-    background-color: #fafafa;
 }
 
 .node-type-item {

@@ -2,6 +2,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import Home from "@/views/Home.vue";
 import MainLayout from "@/components/main/MainLayout.vue";
+import FlowEditorPage from "@/views/flow/FlowEditorPage.vue";
+import FlowRuntimePage from "@/views/flow/FlowRuntimePage.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -21,7 +23,19 @@ const routes: RouteRecordRaw[] = [
         name: 'FlowEditor',
         component: () => import('@/views/flow/FlowEditor.vue'),
         props: true
-    }
+    },
+    {
+        path: '/flows/:flowId/edit',
+        name: 'FlowEditorPage',
+        component: FlowEditorPage,
+        props: true
+    },
+    {
+        path: '/flows/:flowId/runs/:instanceId',
+        name: 'FlowRuntimePage',
+        component: FlowRuntimePage,
+        props: true
+    },
 ]
 
 

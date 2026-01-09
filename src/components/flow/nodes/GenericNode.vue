@@ -41,4 +41,8 @@ defineProps<{
     border: #dab94b 1px solid;
 }
 
+.generic-node.waiting {
+    border: #45d3c3 1px solid;
+}
+
 </style>
