@@ -1,5 +1,6 @@
 import type {NodeType} from "@/types/node-type.ts";
 import type {NodeInstanceStatus} from "@/types/instance/node-instance-status.ts";
+import type {NodeRunStatus} from "@/types/node-status.ts";
 
 export interface NodeInstance {
     /** 节点实例 ID（UUID） */
@@ -15,7 +16,7 @@ export interface NodeInstance {
     nodeType: string
 
     /** 执行状态 */
-    status: NodeInstanceStatus
+    status: NodeRunStatus
 
     /** 实际输入数据 */
     inputData?: Record<string, any>

@@ -5,7 +5,6 @@ import type {Node} from "@/types/node.ts";
 import type {NodeInstance} from "@/types/instance/node-instance.ts";
 import {getFlowDetail} from "@/api/flow.ts";
 import type {Edge} from "@/types/edge.ts";
-import {NodeInstanceStatus} from "@/types/instance/node-instance-status.ts";
 import {NodeMouseEvent, VueFlow} from "@vue-flow/core";
 import type {FlowNode} from "@/types/flow-node-vueflow.ts";
 import type {FlowEdge} from "@/types/flow-edge-vueflow.ts";
@@ -39,6 +38,7 @@ const nodeInstanceToFlownode = (instance: NodeInstance): FlowNode => {
         type: instance.nodeType,
         data: {
             label: instance.type?.name ?? 'Node',
+            status: instance.status,
             ...node?.data
         }
     }
@@ -88,7 +88,7 @@ const buildNodeTemplatesToNodeInstance = (n: Node[]): NodeInstance[] => {
             instanceId: instanceId,
             nodeId: nodeTemplate.id,
             nodeType: nodeTemplate.nodeType?.typeKey || '',
-            status: NodeInstanceStatus.INIT,
+            status: 'pending',
             inputData: {},
             outputData: {},
             errorMessage: '',
