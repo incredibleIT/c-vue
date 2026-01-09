@@ -7,4 +7,5 @@ export enum NodeInstanceStatus {
     SKIPPED = 'skipped',
     WAITING = 'waiting',
     RETRYING = 'retrying',
+    INIT = 'init',
 }

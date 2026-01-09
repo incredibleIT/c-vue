@@ -1,6 +1,7 @@
 import type {Node} from "@/types/node.ts";
 import type {FlowNode} from "@/types/flow-node-vueflow.ts";
 import {nodeStatusMap} from "@/stores/node-status-store.ts";
+import type {NodeInstance} from "@/types/instance/node-instance.ts";
 
 export function nodeToFlownode(node: Node): FlowNode {
     console.log(`Convert node to flownode: ${node.id}, status: ${nodeStatusMap[node.id]}`)
@@ -13,7 +14,6 @@ export function nodeToFlownode(node: Node): FlowNode {
         type: node.type,
         data: {
             label: node.data?.label ?? node.nodeType?.name ?? 'Node',
-            status: nodeStatusMap[node.id],
             ...node.data
         },
     }
