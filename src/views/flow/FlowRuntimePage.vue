@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router'
-import {computed, onMounted, ref, Ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, Ref} from "vue";
 import type {Node} from "@/types/node.ts";
 import type {NodeInstance} from "@/types/instance/node-instance.ts";
 import {getFlowDetail} from "@/api/flow.ts";
@@ -26,9 +26,13 @@ const edges = computed<FlowEdge[]>(() => edgeTemplates.value.map(edgeInstanceToF
 const vueFlowNodeTypes = computed(() => buildVueFlowNodeTypes(nodeTypes.value))
 const activeNode: Ref<FlowNode | null> = ref(null)
 const activeNodeType: Ref<NodeType | null> = ref(null)
+import {initNodeStatusListener} from "@/bootstrap/node-status.ts";
+import {nodeStatusWS} from "@/services/node-status-ws.ts";
+import {nodeStatusMap} from "@/stores/node-status-store.ts";
 
 const nodeInstanceToFlownode = (instance: NodeInstance): FlowNode => {
     const node = nodeTemplates.value.find(n => n.id === instance.nodeId)
+    instance.status = nodeStatusMap[instance.nodeId]
     return {
         id: node?.id || '',
         position: {
@@ -61,6 +65,7 @@ const edgeInstanceToFlowedge = (instance: Edge): FlowEdge => {
  * 挂载后, 运行时页面要自己加载模版, 监听运行时数据, 显示运行时数据
  */
 onMounted(async () => {
+    initNodeStatusListener()
     const nodeTypeRes = await listNodeTypes()
     nodeTypes.value = nodeTypeRes.data
     const flowTemplate = await loadFlowTemplate(flowId)
@@ -71,6 +76,10 @@ onMounted(async () => {
     console.log('nodeInstances', nodeInstances.value)
     console.log('edgeTemplates', edgeTemplates.value)
     console.log('nodeTemplates', nodeTemplates.value)
+})
+
+onUnmounted(() => {
+    nodeStatusWS.disconnect()
 })
 
 const loadFlowTemplate = (flowId: String) => {
